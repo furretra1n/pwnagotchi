@@ -33,7 +33,7 @@
         - apt-daily-upgrade.service
         - wpa_supplicant.service
         - bluetooth.service
-        - triggerhappy.service
+#        - triggerhappy.service
         - ifup@wlan0.service
         - dnsmasq.service
     packages:
