@@ -411,13 +411,13 @@
       dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
       backup: no
       regexp: "KERNEL_VERSION = .*$"
-      replace: "KERNEL_VERSION = 5.10"
+      replace: "KERNEL_VERSION = 6.1"
 
   - name: choose the right kernel release (variable) (bcm43436b0)
     lineinfile:
       dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
       insertafter: "DRIVER_FOLDER_NAME = .*$"
-      line: "KERNEL_RELEASE = 5.10.103-v7+"
+      line: "KERNEL_RELEASE = 6.1.21-v7+"
 
   - name: choose the right kernel release (replace string) (bcm43436b0)
     replace:
@@ -454,13 +454,13 @@
       dest: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/Makefile
       backup: no
       regexp: "KERNEL_VERSION = .*$"
-      replace: "KERNEL_VERSION = 5.10"
+      replace: "KERNEL_VERSION = 6.1"
 
   - name: choose the right kernel release (variable) (bcm43430a1)
     lineinfile:
       dest: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/Makefile
       insertafter: "DRIVER_FOLDER_NAME = .*$"
-      line: "KERNEL_RELEASE = 5.10.103-v7+"
+      line: "KERNEL_RELEASE = 6.1.21-v7+"
 
   - name: choose the right kernel release (replace string) (bcm43430a1)
     replace:
@@ -512,13 +512,13 @@
       dest: /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/Makefile
       backup: no
       regexp: "KERNEL_VERSION = .*$"
-      replace: "KERNEL_VERSION = 5.10"
+      replace: "KERNEL_VERSION = 6.1"
 
   - name: choose the right kernel release (variable) (bcm43455c0)
     lineinfile:
       dest: /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/Makefile
       insertafter: "DRIVER_FOLDER_NAME = .*$"
-      line: "KERNEL_RELEASE = 5.10.103-v7+"
+      line: "KERNEL_RELEASE = 6.1.21-v7+"
 
   - name: choose the right kernel release (replace string) (bcm43455c0)
     replace:
@@ -556,15 +556,10 @@
   - name: make install nexutil
     command: chdir=/usr/local/src/nexmon/utilities/nexutil/ make install
 
-  # - name: copy modified driver
-  #   shell: "cd /usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/ && cp brcmfmac.ko /lib/modules/5.10.103-v7+/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko && depmod -a"
-  #   args:
-  #     executable: /bin/bash
-
   - name: copy modified driver (everyone but RPiZW)
     copy:
-      src: /usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/brcmfmac.ko
-      dest: /lib/modules/5.10.103-v7+/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko
+      src: /usr/local/src/nexmon/patches/driver/brcmfmac_6.1.y-nexmon/brcmfmac.ko
+      dest: /lib/modules/6.1.21-v7+/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko
 
   - name: ensure depmod runs on reboot to load modified driver (brcmfmac)
     lineinfile:
@@ -654,7 +649,7 @@
 
   - name: Reconfigure auto-update to point to the aluminum-ice repo (bizzarely changing the plugin code directly reverts to the old string)
     replace:
-      dest: /usr/local/lib/python3.7/dist-packages/pwnagotchi/plugins/default/auto-update.py
+      dest: /usr/local/lib/python3.9/dist-packages/pwnagotchi/plugins/default/auto-update.py
       backup: no
       regexp: "evilsocket/pwnagotchi"
       replace: "aluminum-ice/pwnagotchi"
