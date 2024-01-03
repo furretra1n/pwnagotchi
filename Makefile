@@ -72,7 +72,7 @@ $(PWN_RELEASE).7z: $(PWN_RELEASE).img $(PWN_RELEASE).sha256
 	7z a $(PWN_RELEASE).7z $^
 
 .PHONY: image
-image: $(PWN_RELEASE).zip
+image: $(PWN_RELEASE).zip $(PWN_RELEASE).7z
 
 clean:
 	- python3 setup.py clean --all
