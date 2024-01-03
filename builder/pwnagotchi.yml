@@ -119,6 +119,7 @@
           - binutils
           - lnav
           - p7zip-full
+          - libopenblas-dev
 
   environment:
     ARCHFLAGS: "-arch armv7l"
