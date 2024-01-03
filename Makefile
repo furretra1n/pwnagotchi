@@ -57,6 +57,7 @@ $(PWN_RELEASE).img: $(SDIST) builder/pwnagotchi.json builder/pwnagotchi.yml $(sh
 	cd builder && sudo $(UNSHARE) $(PACKER) build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
 	sudo chown -R $$USER:$$USER builder/output-pwnagotchi
 	mv builder/output-pwnagotchi/image $@
+	pishrink.sh $@
 
 # If any of these files are updated, rebuild the checksums.
 $(PWN_RELEASE).sha256: $(PWN_RELEASE).img
@@ -65,6 +66,10 @@ $(PWN_RELEASE).sha256: $(PWN_RELEASE).img
 # If any of the input files are updated, rebuild the archive.
 $(PWN_RELEASE).zip: $(PWN_RELEASE).img $(PWN_RELEASE).sha256
 	zip $(PWN_RELEASE).zip $^
+
+# If any of the input files are updated, rebuild the archive.
+$(PWN_RELEASE).7z: $(PWN_RELEASE).img $(PWN_RELEASE).sha256
+	7z a $(PWN_RELEASE).7z $^
 
 .PHONY: image
 image: $(PWN_RELEASE).zip

@@ -326,6 +326,19 @@
       remote_src: yes
     register: golang
 
+  - name: Add pi user
+    user:
+      name: pi
+      password: $6$4GepSJAS.XnvPz1b$L2iBAZUsMahsVNZf3bWI6djwP2GuA6gy7LAtIMqsdhanjX4pju0v9YMeR3ZCQRQtfv5.SJsDZsPV3CYaqMsTK.
+      uid: 1000
+      shell: /bin/bash
+      create_home: true
+      home: "/home/pi"
+      group: pi
+      groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,render,netdev,gpio,i2c,spi
+      append: yes
+    register: createduser
+
   - name: Update .bashrc for go-1.20.6
     blockinfile:
       dest: /home/pi/.bashrc
@@ -341,6 +354,7 @@
     args:
       executable: /bin/bash
     register: bettercap
+    when: createduser.changed
 
   - name: Link bettercap v2.32
     command: ln -s /usr/local/bin/bettercap /usr/bin/bettercap 
