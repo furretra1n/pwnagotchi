@@ -27,16 +27,16 @@ class Led(plugins.Plugin):
 
     # called when the plugin is loaded
     def on_loaded(self):
-    if os.path.exists("/sys/class/leds/led%d/brightness" % self.options['led']):
-        self._led_file = "/sys/class/leds/led%d/brightness" % self.options['led']
-    elif os.path.exists("/sys/class/leds/ACT"):
-        self._led_file = "/sys/class/leds/ACT/brightness"
-        logging.warn("[led] option '%s' does not lead to a valid /sys/class/leds path", self.options['led'])
-        self._delay = int(self.options['delay'])
+        if os.path.exists("/sys/class/leds/led%d/brightness" % self.options['led']):
+            self._led_file = "/sys/class/leds/led%d/brightness" % self.options['led']
+        elif os.path.exists("/sys/class/leds/ACT"):
+            self._led_file = "/sys/class/leds/ACT/brightness"
+            logging.warn("[led] option '%s' does not lead to a valid /sys/class/leds path", self.options['led'])
+            self._delay = int(self.options['delay'])
 
-        logging.info("[led] plugin loaded for %s" % self._led_file)
-        self._on_event('loaded')
-        _thread.start_new_thread(self._worker, ())
+            logging.info("[led] plugin loaded for %s" % self._led_file)
+            self._on_event('loaded')
+            _thread.start_new_thread(self._worker, ())
 
     def _on_event(self, event):
         if not self._is_busy:
