@@ -3,8 +3,8 @@
     {
       "name": "pwnagotchi",
       "type": "arm-image",
-      "iso_url": "https://downloads.raspberrypi.org/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06/2023-12-05-raspios-bullseye-arm64-lite.img.xz",
-      "iso_checksum": "8b6199eccbce839141df4de7ebfd8e00c0c2a7ff6c2cda84e4a234ddcfa3f68a",
+      "iso_url": "https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2023-12-06/2023-12-05-raspios-bullseye-armhf-lite.img.xz",
+      "iso_checksum": "a0fea9b9adf10919891ad36ccc9820eba2755ca02a8579d5b5d668897ca8a070",
       "target_image_size": 9368709120,
       "qemu_args": ["-cpu", "arm1176"]
     }
@@ -14,6 +14,7 @@
       "type": "shell",
       "inline": [
         "uname -a",
+        "mv /etc/ld.so.preload /etc/ld.so.preload.DISABLED",
         "dpkg-architecture",
         "mkdir -p /usr/local/src/pwnagotchi"
       ]
