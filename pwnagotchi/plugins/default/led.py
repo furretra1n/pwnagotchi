@@ -32,7 +32,9 @@ class Led(plugins.Plugin):
 
         if os.path.exists("/sys/class/leds/led%d/brightness" % self.options['led']):
             self._led_file = "/sys/class/leds/led%d/brightness" % self.options['led']
-        elif os.path.exists("/sys/class/leds/ACT"):
+        elif os.path.exists("/sys/class/leds/ACT") and self.options['led'] == 0:
+            self._led_file = "/sys/class/leds/ACT/brightness"
+        elif os.path.exists("/sys/class/leds/ACT") and self.options['led'] != 0:
             self._led_file = "/sys/class/leds/ACT/brightness"
             logging.warn("[led] option '%s' does not lead to a valid /sys/class/leds path", self.options['led'])
 
