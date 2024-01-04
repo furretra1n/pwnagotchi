@@ -15,6 +15,13 @@
         patch:      "bcm43436b0/9_88_4_65"
         cpu:        any, #cortex-a53
         arch_flags: "-arch armv7l"
+      RPi4B: 
+        kernel_min: "6.1"
+        kernel:     "6.1.21-v7l+"
+        firmware:   "brcmfmac43455-sdio.bin"
+        patch:      "bcm43455c0/7_45_206"
+        cpu:        any, #cortex-a72
+        arch_flags: "-arch armv7l"
     system:
       boot_options:
         - "dtoverlay=dwc2"
@@ -64,7 +71,7 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
-          # Remove every golang package because we will install go-1.20.2
+          # Remove every golang package because we will install go-1.21.5
           - golang*
         install:
           - rsync
@@ -133,6 +140,7 @@
           - libfl-dev
           - g++
           - xxd
+    go_lang:  "go.121.5"
 
   environment:
     ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
@@ -336,7 +344,7 @@
   # Install go-1.21.5
   - name: Install go-1.21.5
     unarchive:
-      src: https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
+      src: "https://go.dev/dl/{{ go_lang }}.linux-armv6l.tar.gz"
       dest: /usr/local
       remote_src: yes
     register: golang
@@ -354,7 +362,7 @@
       append: yes
     register: createduser
 
-  - name: Update .bashrc for go-1.20.6
+  - name: Update .bashrc for go
     blockinfile:
       dest: /home/pi/.bashrc
       state: present
