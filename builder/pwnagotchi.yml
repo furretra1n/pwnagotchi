@@ -490,18 +490,6 @@
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
 
-  # - name: backup original firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/ && make backup-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
-
-  # - name: install new firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/ && make install-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
-
   - name: install new firmware (bcm43430a1)
     copy:
       src: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/brcmfmac43430-sdio.bin
@@ -547,18 +535,6 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
-
-  # - name: backup original firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/ && make backup-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
-
-  # - name: install new firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/ && make install-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
 
   - name: install new firmware (bcm43455c0)
     copy:
