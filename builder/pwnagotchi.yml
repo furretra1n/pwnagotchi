@@ -160,7 +160,8 @@
           - libfl-dev
           - g++
           - xxd          
-    go_lang:  "go1.21.5"
+    go_lang:    "go1.21.5"
+    swap_size:  "512"
 
   environment:
     ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
@@ -234,7 +235,7 @@
     lineinfile:
       path: /etc/dphys-swapfile
       regexp: "^CONF_SWAPSIZE=.*$"
-      line: "CONF_SWAPSIZE=512"
+      line: "CONF_SWAPSIZE={{ swap_size }}"
 
   - name: clone papirus repository
     git:
@@ -429,65 +430,45 @@
       dest: /usr/local/src/nexmon
     register: nexmongit
 
-  - name: make firmware
-    shell: "source ./setup_env.sh && make"
-    args:
-      executable: /bin/bash
-      chdir: /usr/local/src/nexmon/
-    environment:
-      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
-      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
+  # Install nexmon for RPiZ2W
+  - name: build and install nexmon for RPiZ2W
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPiZ2W.arch_flags }}" 
+      kernel_min: "{{ boards.RPiZ2W.kernel_min }}"
+      kernel:     "{{ boards.RPiZ2W.kernel }}"
+      patch:      "{{ boards.RPiZ2W.patch }}"
+      firmware:   "{{ boards.RPiZ2W.firmware }}"
+    when: nexmongit.changed
 
-  - name: make firmware patch (bcm43455c0)
-    shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/ && make"
-    args:
-      executable: /bin/bash
-      chdir: /usr/local/src/nexmon/
-    environment:
-      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
-      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
+  # Install nexmon for RPiZW
+  - name: build and install nexmon for RPiZW
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPiZW.arch_flags }}" 
+      kernel_min: "{{ boards.RPiZW.kernel_min }}"
+      kernel:     "{{ boards.RPiZW.kernel }}"
+      patch:      "{{ boards.RPiZW.patch }}"
+      firmware:   "{{ boards.RPiZW.firmware }}"
+    when: nexmongit.changed
 
-  - name: install new firmware (bcm43455c0)
-    copy:
-      src: /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/brcmfmac43455-sdio.bin
-      dest: /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin
-      follow: true
-
-  - name: make firmware patch (bcm43436b0)
-    shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
-    args:
-      executable: /bin/bash
-      chdir: /usr/local/src/nexmon/
-    environment:
-      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
-      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
-
-  - name: install new firmware (bcm43436b0)
-    copy:
-      src: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/brcmfmac43436-sdio.bin
-      dest: /usr/lib/firmware/brcm/brcmfmac43436-sdio.bin
-      follow: true
-
-  - name: make firmware patch (bcm43430a1)
-    shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/ && make"
-    args:
-      executable: /bin/bash
-      chdir: /usr/local/src/nexmon/
-    environment:
-      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
-      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
-
-  - name: install new firmware (bcm43430a1)
-    copy:
-      src: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/brcmfmac43430-sdio.bin
-      dest: /usr/lib/firmware/brcm/brcmfmac43430-sdio.bin
-      follow: true
+  # Install nexmon for RPi4B
+  - name: build and install nexmon for RPi4B
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPi4B.arch_flags }}" 
+      kernel_min: "{{ boards.RPi4B.kernel_min }}"
+      kernel:     "{{ boards.RPi4B.kernel }}"
+      patch:      "{{ boards.RPi4B.patch }}"
+      firmware:   "{{ boards.RPi4B.firmware }}"
+    when: nexmongit.changed
 
   - name: copy 43430-sdio as 43436s-sdio for the special 43430/1 /2
     copy:
       src: /usr/lib/firmware/brcm/brcmfmac43430-sdio.bin
       dest: /usr/lib/firmware/brcm/brcmfmac43436s-sdio.bin
       follow: true
+    when: nexmongit.changed
 
   # delete blob files that make nexmon sad
   - name: Delete the firmware blob files to avoid some nexmon crashing
@@ -502,23 +483,14 @@
       - /usr/lib/firmware/brcm/brcmfmac43436-sdio.clm_blob
       - /usr/lib/firmware/brcm/brcmfmac43436-sdio.raspberrypi,model-zero-2-w.clm_blob
       - /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
-
-  - name: backup original driver
-    command: "mv /usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz /usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz.orig"
-
-  - name: copy modified driver
-    copy:
-      src: "/usr/local/src/nexmon/patches/driver/brcmfmac_{{ boards.RPiZ2W.kernel_min }}.y-nexmon/brcmfmac.ko"
-      dest: "/usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko"
-
-  - name : load brcmfmac drivers
-    command: "/sbin/depmod -a"
+    when: nexmongit.changed
 
   # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
   - name: Delete nexmon content & directory
     file:
       state: absent
       path: /usr/local/src/nexmon/
+    when: nexmongit.changed
 
   # Install screenrc configuration
   - name: clone screenrc repository
