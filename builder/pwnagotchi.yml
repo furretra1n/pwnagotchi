@@ -584,12 +584,18 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
+    environment:
+      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
+      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
 
   - name: make firmware patch (bcm43455c0)
     shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/ && make"
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
+    environment:
+      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
+      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
 
   - name: install new firmware (bcm43455c0)
     copy:
@@ -602,6 +608,9 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
+    environment:
+      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
+      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
 
   - name: install new firmware (bcm43436b0)
     copy:
@@ -614,6 +623,9 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
+    environment:
+      ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
+      QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
 
   - name: install new firmware (bcm43430a1)
     copy:
