@@ -7,6 +7,14 @@
     pwnagotchi:
       hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"
       version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }}"
+    boards:
+      RPiZ2W: 
+        kernel_min: "6.1"
+        kernel:     "6.1.21-v7+"
+        firmware:   "brcmfmac43436-sdio.bin"
+        patch:      "bcm43436b0/9_88_4_65"
+        cpu:        any, #cortex-a53
+        arch_flags: "-arch armv7l"
     system:
       boot_options:
         - "dtoverlay=dwc2"
@@ -33,7 +41,7 @@
         - apt-daily-upgrade.service
         - wpa_supplicant.service
         - bluetooth.service
-#        - triggerhappy.service
+        - triggerhappy.service
         - ifup@wlan0.service
         - dnsmasq.service
     packages:
@@ -127,8 +135,8 @@
           - xxd
 
   environment:
-    ARCHFLAGS: "-arch armv7l"
-    QEMU_UNAME: "{{ kernel.full }}"
+    ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
+    QEMU_UNAME: "{{ boards.RPiZ2W.kernel }}"
 
   tasks:
   - name: System details
@@ -431,13 +439,13 @@
   #     dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
   #     backup: no
   #     regexp: "KERNEL_VERSION = .*$"
-  #     replace: "KERNEL_VERSION = 6.1"
+  #     replace: "KERNEL_VERSION = {{ boards.RPiZ2W.kernel_min }}"
 
   # - name: choose the right kernel release (variable) (bcm43436b0)
   #   lineinfile:
   #     dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
   #     insertafter: "DRIVER_FOLDER_NAME = .*$"
-  #     line: "KERNEL_RELEASE = 6.1.21-v7+"
+  #     line: "KERNEL_RELEASE = {{ boards.RPiZ2W.kernel }}"
 
   # - name: choose the right kernel release (replace string) (bcm43436b0)
   #   replace:
@@ -462,13 +470,13 @@
   #     dest: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/Makefile
   #     backup: no
   #     regexp: "KERNEL_VERSION = .*$"
-  #     replace: "KERNEL_VERSION = 6.1"
+  #     replace: "KERNEL_VERSION = {{ boards.RPiZ2W.kernel_min }}"
 
   # - name: choose the right kernel release (variable) (bcm43430a1)
   #   lineinfile:
   #     dest: /usr/local/src/nexmon/patches/bcm43430a1/7_45_41_46/nexmon/Makefile
   #     insertafter: "DRIVER_FOLDER_NAME = .*$"
-  #     line: "KERNEL_RELEASE = 6.1.21-v7+"
+  #     line: "KERNEL_RELEASE = {{ boards.RPiZ2W.kernel }}"
 
   # - name: choose the right kernel release (replace string) (bcm43430a1)
   #   replace:
@@ -508,13 +516,13 @@
   #     dest: /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/Makefile
   #     backup: no
   #     regexp: "KERNEL_VERSION = .*$"
-  #     replace: "KERNEL_VERSION = 6.1"
+  #     replace: "KERNEL_VERSION = {{ boards.RPiZ2W.kernel_min }}"
 
   # - name: choose the right kernel release (variable) (bcm43455c0)
   #   lineinfile:
   #     dest: /usr/local/src/nexmon/patches/bcm43455c0/7_45_206/nexmon/Makefile
   #     insertafter: "DRIVER_FOLDER_NAME = .*$"
-  #     line: "KERNEL_RELEASE = 6.1.21-v7+"
+  #     line: "KERNEL_RELEASE = {{ boards.RPiZ2W.kernel }}"
 
   # - name: choose the right kernel release (replace string) (bcm43455c0)
   #   replace:
@@ -542,8 +550,8 @@
 
   # - name: copy modified driver (everyone but RPiZW)
   #   copy:
-  #     src: /usr/local/src/nexmon/patches/driver/brcmfmac_6.1.y-nexmon/brcmfmac.ko
-  #     dest: /lib/modules/6.1.21-v7+/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko
+  #     src: /usr/local/src/nexmon/patches/driver/brcmfmac_{{ boards.RPiZ2W.kernel_min }}.y-nexmon/brcmfmac.ko
+  #     dest: /lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko
 
   # - name: ensure depmod runs on reboot to load modified driver (brcmfmac)
   #   lineinfile:
@@ -626,12 +634,12 @@
       - /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
 
   - name: backup original driver
-    command: "mv /usr/lib/modules/{{ kernel.full }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz /usr/lib/modules/{{ kernel.full }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz.orig"
+    command: "mv /usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz /usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz.orig"
 
   - name: copy modified driver
     copy:
-      src: "/usr/local/src/nexmon/patches/driver/brcmfmac_{{ kernel.min }}.y-nexmon/brcmfmac.ko"
-      dest: "/usr/lib/modules/{{ kernel.full }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko"
+      src: "/usr/local/src/nexmon/patches/driver/brcmfmac_{{ boards.RPiZ2W.kernel_min }}.y-nexmon/brcmfmac.ko"
+      dest: "/usr/lib/modules/{{ boards.RPiZ2W.kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko"
 
   - name : load brcmfmac drivers
     command: "/sbin/depmod -a"
