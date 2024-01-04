@@ -107,6 +107,10 @@
           - cryptsetup
           - dnsmasq
           - aircrack-ng
+          - binutils
+          - lnav
+          - p7zip-full
+          - libopenblas-dev
           - raspberrypi-kernel-headers
           - libgmp3-dev
           - qpdf
@@ -116,10 +120,11 @@
           - autoconf
           - libtool
           - texinfo
-          - binutils
-          - lnav
-          - p7zip-full
-          - libopenblas-dev
+          - gcc-arm-none-eabi
+          - wl
+          - libfl-dev
+          - g++
+          - xxd
 
   environment:
     ARCHFLAGS: "-arch armv7l"
@@ -446,18 +451,6 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
-
-  # - name: backup original firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make backup-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
-
-  # - name: install new firmware
-  #   shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make install-firmware"
-  #   args:
-  #     executable: /bin/bash
-  #     chdir: /usr/local/src/nexmon/
 
   - name: install new firmware (bcm43436b0)
     copy:
