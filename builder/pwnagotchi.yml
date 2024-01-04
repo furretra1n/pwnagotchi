@@ -555,6 +555,24 @@
   #     state: absent
   #     path: /usr/local/src/nexmon/
 
+  # Remove packages not needed after nexmon is installed
+  - name: Remove nexmon-related packages
+    apt:
+      pkg:
+        - qpdf
+        - bison
+        - flex
+        - make
+        - autoconf
+        - libtool
+        - texinfo
+        - gcc-arm-none-eabi
+        - wl
+        - libfl-dev
+        - g++
+        - xxd
+      state: absent
+
   # Install screenrc configuration
   - name: clone screenrc repository
     git:
