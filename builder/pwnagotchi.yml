@@ -15,14 +15,14 @@
         patch:      "bcm43430a1/7_45_41_46"
         cpu:        arm1176
         arch_flags: "-arch armv6l"
-      RPiZ2W: 
+      RPiZ2W:
         kernel_min: "6.1"
         kernel:     "6.1.21-v7+"
         firmware:   "brcmfmac43436-sdio.bin"
         patch:      "bcm43436b0/9_88_4_65"
         cpu:        any #cortex-a53
         arch_flags: "-arch armv7l"
-      RPi4B: 
+      RPi4B:
         kernel_min: "6.1"
         kernel:     "6.1.21-v7l+"
         firmware:   "brcmfmac43455-sdio.bin"
@@ -55,12 +55,11 @@
         - apt-daily-upgrade.service
         - wpa_supplicant.service
         - bluetooth.service
-        # - triggerhappy.service
         - ifup@wlan0.service
         - dnsmasq.service
     packages:
       bettercap:
-        # We will install bettercap v2.32 from source
+        # We will install bettercap from source
         # url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
@@ -78,7 +77,7 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
-          # Remove every golang package because we will install go-1.21.5
+          # Remove every golang package because we will install the latest go
           - golang*
         install:
           - rsync
@@ -135,18 +134,6 @@
           - libopenblas-dev
           - raspberrypi-kernel-headers
           - libgmp3-dev
-          - qpdf
-          - bison
-          - flex
-          - make
-          - autoconf
-          - libtool
-          - texinfo
-          - gcc-arm-none-eabi
-          - wl
-          - libfl-dev
-          - g++
-          - xxd
         nexmon:
           - qpdf
           - bison
@@ -159,7 +146,7 @@
           - wl
           - libfl-dev
           - g++
-          - xxd          
+          - xxd
     go_lang:    "go1.21.5"
     swap_size:  "512"
 
@@ -228,7 +215,7 @@
 
   - name: install packages
     apt:
-      name: "{{ packages.apt.install }}"
+      name: "{{ packages.apt.install + packages.apt.nexmon }}"
       state: present
 
   - name: configure dphys-swapfile
@@ -333,7 +320,7 @@
   - name: Upgrade pip and install rpi-hardware-pwm
     pip:
       name:
-        - pip>=20.3
+        - pip>=23.3
         - rpi-hardware-pwm
 
   # We need the --ignore-installed option so that pip simply overwrites/upgrades existing
@@ -362,8 +349,7 @@
       remote_src: yes
       mode: 0755
 
-  # Install go-1.21.5
-  - name: Install go-1.21.5
+  - name: Install go
     unarchive:
       src: "https://go.dev/dl/{{ go_lang }}.linux-armv6l.tar.gz"
       dest: /usr/local
@@ -393,15 +379,15 @@
       insertafter: EOF
     when: golang.changed
 
-  - name: Install bettercap v2.32
+  - name: Install bettercap (from source)
     shell: "export GOPATH=$HOME/go && export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin && go env -w GO111MODULE=off && go get github.com/bettercap/bettercap && cd $GOPATH/src/github.com/bettercap/bettercap && make build && make install"
     args:
       executable: /bin/bash
     register: bettercap
     when: createduser.changed
 
-  - name: Link bettercap v2.32
-    command: ln -s /usr/local/bin/bettercap /usr/bin/bettercap 
+  - name: Link bettercap
+    command: ln -s /usr/local/bin/bettercap /usr/bin/bettercap
     when: bettercap.changed
 
   - name: clone bettercap caplets
@@ -434,7 +420,7 @@
   - name: build and install nexmon for RPiZ2W
     include_tasks: nexmon.yml
     vars:
-      arch_flags: "{{ boards.RPiZ2W.arch_flags }}" 
+      arch_flags: "{{ boards.RPiZ2W.arch_flags }}"
       kernel_min: "{{ boards.RPiZ2W.kernel_min }}"
       kernel:     "{{ boards.RPiZ2W.kernel }}"
       patch:      "{{ boards.RPiZ2W.patch }}"
@@ -445,7 +431,7 @@
   - name: build and install nexmon for RPiZW
     include_tasks: nexmon.yml
     vars:
-      arch_flags: "{{ boards.RPiZW.arch_flags }}" 
+      arch_flags: "{{ boards.RPiZW.arch_flags }}"
       kernel_min: "{{ boards.RPiZW.kernel_min }}"
       kernel:     "{{ boards.RPiZW.kernel }}"
       patch:      "{{ boards.RPiZW.patch }}"
