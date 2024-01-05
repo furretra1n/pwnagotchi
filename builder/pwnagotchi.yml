@@ -14,21 +14,21 @@
         firmware:   "brcmfmac43430-sdio.bin"
         patch:      "bcm43430a1/7_45_41_46"
         cpu:        arm1176
-        arch_flags: "-arch armv6l"
+        arch_flags: "-arch aarch64"
       RPiZ2W:
         kernel_min: "6.1"
         kernel:     "6.1.21-v7+"
         firmware:   "brcmfmac43436-sdio.bin"
         patch:      "bcm43436b0/9_88_4_65"
         cpu:        any #cortex-a53
-        arch_flags: "-arch armv7l"
+        arch_flags: "-arch aarch64"
       RPi4B:
         kernel_min: "6.1"
         kernel:     "6.1.21-v7l+"
         firmware:   "brcmfmac43455-sdio.bin"
         patch:      "bcm43455c0/7_45_206"
         cpu:        any #cortex-a72
-        arch_flags: "-arch armv7l"
+        arch_flags: "-arch aarch64"
     system:
       boot_options:
         - "dtoverlay=dwc2"
@@ -351,7 +351,7 @@
 
   - name: Install go
     unarchive:
-      src: "https://go.dev/dl/{{ go_lang }}.linux-armv6l.tar.gz"
+      src: "https://go.dev/dl/{{ go_lang }}.linux-arm64.tar.gz"
       dest: /usr/local
       remote_src: yes
     register: golang
