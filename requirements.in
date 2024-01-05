@@ -61,17 +61,15 @@ scapy
 smbus2
 spidev
 
-# Primary AI library.  Safe to upgrade as v3 is a different package.
-# Upgrading to stable-baselines3 is currently impossible because
-# it depends on PyTorch which requires a 64-bit processor.
-stable-baselines==2.10.2
+# Primary AI library
+stable_baselines3
+torch
+torchvision
+shimmy
 
-# stable-baselines made a mistake.
-# stable-baselines has a tensorflow requirement of ">=1.8.0,<2.0.0",
-# but the requirement is the result of a calculation during setup.
-# As a result, the requirement is entirely missing from the wheel file.
-# Furthermore, "<2.0.0" will fail because tensorflow v1.14 contains
-# breaking API changes in preparation for their v2.X release.
+# RPi hardware
+RPi.GPIO
+rpi_hardware_pwm
 
 # Used for loading and writing configs.
 toml

@@ -87,12 +87,10 @@
           - build-essential
           - python3-pip
           - python3-mpi4py
-          - python3-smbus
           - unzip
           - gawk
           - libopenmpi-dev
           - libatlas-base-dev
-          - libjasper-dev
           - libgtk-3-0
           - libqt5gui5
           - libqt5test5
@@ -134,6 +132,8 @@
           - libopenblas-dev
           - raspberrypi-kernel-headers
           - libgmp3-dev
+          - libdbus-1-dev
+          - libglib2.0-dev
         nexmon:
           - qpdf
           - bison
