@@ -5,7 +5,7 @@
       "type": "arm-image",
       "iso_url": "https://downloads.raspberrypi.org/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06/2023-12-05-raspios-bullseye-arm64-lite.img.xz",
       "iso_checksum": "8b6199eccbce839141df4de7ebfd8e00c0c2a7ff6c2cda84e4a234ddcfa3f68a",
-      "target_image_size": 9368709120,
+      "target_image_size": 10737418240,
       "qemu_args": ["-cpu", "arm1176"]
     }
   ],

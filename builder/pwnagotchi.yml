@@ -410,73 +410,73 @@
       mode: 0755
 
   # Install nexmon to fix wireless scanning (takes 2.5G of space)
-  # - name: clone nexmon repository
-  #   git:
-  #     repo: https://github.com/DrSchottky/nexmon.git
-  #     dest: /usr/local/src/nexmon
-  #   register: nexmongit
+  - name: clone nexmon repository
+    git:
+      repo: https://github.com/DrSchottky/nexmon.git
+      dest: /usr/local/src/nexmon
+    register: nexmongit
 
-  # # Install nexmon for RPiZ2W
-  # - name: build and install nexmon for RPiZ2W
-  #   include_tasks: nexmon.yml
-  #   vars:
-  #     arch_flags: "{{ boards.RPiZ2W.arch_flags }}"
-  #     kernel_min: "{{ boards.RPiZ2W.kernel_min }}"
-  #     kernel:     "{{ boards.RPiZ2W.kernel }}"
-  #     patch:      "{{ boards.RPiZ2W.patch }}"
-  #     firmware:   "{{ boards.RPiZ2W.firmware }}"
-  #   when: nexmongit.changed
+  # Install nexmon for RPiZ2W
+  - name: build and install nexmon for RPiZ2W
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPiZ2W.arch_flags }}"
+      kernel_min: "{{ boards.RPiZ2W.kernel_min }}"
+      kernel:     "{{ boards.RPiZ2W.kernel }}"
+      patch:      "{{ boards.RPiZ2W.patch }}"
+      firmware:   "{{ boards.RPiZ2W.firmware }}"
+    when: nexmongit.changed
 
-  # # Install nexmon for RPiZW
-  # - name: build and install nexmon for RPiZW
-  #   include_tasks: nexmon.yml
-  #   vars:
-  #     arch_flags: "{{ boards.RPiZW.arch_flags }}"
-  #     kernel_min: "{{ boards.RPiZW.kernel_min }}"
-  #     kernel:     "{{ boards.RPiZW.kernel }}"
-  #     patch:      "{{ boards.RPiZW.patch }}"
-  #     firmware:   "{{ boards.RPiZW.firmware }}"
-  #   when: nexmongit.changed
+  # Install nexmon for RPiZW
+  - name: build and install nexmon for RPiZW
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPiZW.arch_flags }}"
+      kernel_min: "{{ boards.RPiZW.kernel_min }}"
+      kernel:     "{{ boards.RPiZW.kernel }}"
+      patch:      "{{ boards.RPiZW.patch }}"
+      firmware:   "{{ boards.RPiZW.firmware }}"
+    when: nexmongit.changed
 
-  # # Install nexmon for RPi4B
-  # - name: build and install nexmon for RPi4B
-  #   include_tasks: nexmon.yml
-  #   vars:
-  #     arch_flags: "{{ boards.RPi4B.arch_flags }}" 
-  #     kernel_min: "{{ boards.RPi4B.kernel_min }}"
-  #     kernel:     "{{ boards.RPi4B.kernel }}"
-  #     patch:      "{{ boards.RPi4B.patch }}"
-  #     firmware:   "{{ boards.RPi4B.firmware }}"
-  #   when: nexmongit.changed
+  # Install nexmon for RPi4B
+  - name: build and install nexmon for RPi4B
+    include_tasks: nexmon.yml
+    vars:
+      arch_flags: "{{ boards.RPi4B.arch_flags }}" 
+      kernel_min: "{{ boards.RPi4B.kernel_min }}"
+      kernel:     "{{ boards.RPi4B.kernel }}"
+      patch:      "{{ boards.RPi4B.patch }}"
+      firmware:   "{{ boards.RPi4B.firmware }}"
+    when: nexmongit.changed
 
-  # - name: copy 43430-sdio as 43436s-sdio for the special 43430/1 /2
-  #   copy:
-  #     src: /usr/lib/firmware/brcm/brcmfmac43430-sdio.bin
-  #     dest: /usr/lib/firmware/brcm/brcmfmac43436s-sdio.bin
-  #     follow: true
-  #   when: nexmongit.changed
+  - name: copy 43430-sdio as 43436s-sdio for the special 43430/1 /2
+    copy:
+      src: /usr/lib/firmware/brcm/brcmfmac43430-sdio.bin
+      dest: /usr/lib/firmware/brcm/brcmfmac43436s-sdio.bin
+      follow: true
+    when: nexmongit.changed
 
-  # # delete blob files that make nexmon sad
-  # - name: Delete the firmware blob files to avoid some nexmon crashing
-  #   file:
-  #     state: absent
-  #     path: '{{ item }}'
-  #   loop:
-  #     - /usr/lib/firmware/brcm/brcmfmac43430-sdio.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43430-sdio.raspberrypi,model-zero-w.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43430b0-sdio.raspberrypi,model-zero-2-w.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43436-sdio.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43436-sdio.raspberrypi,model-zero-2-w.clm_blob
-  #     - /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
-  #   when: nexmongit.changed
+  # delete blob files that make nexmon sad
+  - name: Delete the firmware blob files to avoid some nexmon crashing
+    file:
+      state: absent
+      path: '{{ item }}'
+    loop:
+      - /usr/lib/firmware/brcm/brcmfmac43430-sdio.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43430-sdio.raspberrypi,model-zero-w.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43430b0-sdio.raspberrypi,model-zero-2-w.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43436-sdio.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43436-sdio.raspberrypi,model-zero-2-w.clm_blob
+      - /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
+    when: nexmongit.changed
 
-  # # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
-  # - name: Delete nexmon content & directory
-  #   file:
-  #     state: absent
-  #     path: /usr/local/src/nexmon/
-  #   when: nexmongit.changed
+  # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
+  - name: Delete nexmon content & directory
+    file:
+      state: absent
+      path: /usr/local/src/nexmon/
+    when: nexmongit.changed
 
   # Install screenrc configuration
   - name: clone screenrc repository
