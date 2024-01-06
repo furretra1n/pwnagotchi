@@ -10,21 +10,21 @@
     boards:
       RPiZW:
         kernel_min: "6.1"
-        kernel:     "6.1.21+"
+        kernel:     "6.1.21-v8+"
         firmware:   "brcmfmac43430-sdio.bin"
         patch:      "bcm43430a1/7_45_41_46"
         cpu:        arm1176
         arch_flags: "-arch aarch64"
       RPiZ2W:
         kernel_min: "6.1"
-        kernel:     "6.1.21-v7+"
+        kernel:     "6.1.21-v8+"
         firmware:   "brcmfmac43436-sdio.bin"
         patch:      "bcm43436b0/9_88_4_65"
         cpu:        any #cortex-a53
         arch_flags: "-arch aarch64"
       RPi4B:
         kernel_min: "6.1"
-        kernel:     "6.1.21-v7l+"
+        kernel:     "6.1.21-v8+"
         firmware:   "brcmfmac43455-sdio.bin"
         patch:      "bcm43455c0/7_45_206"
         cpu:        any #cortex-a72
