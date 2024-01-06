@@ -23,7 +23,7 @@
       follow: true
 
   - name: backup original driver
-    command: "mv /usr/lib/modules/{{ kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz /usr/lib/modules/{{ kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.xz.orig"
+    command: "mv /usr/lib/modules/{{ kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko /usr/lib/modules/{{ kernel }}/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko.orig"
 
   - name: copy modified driver
     copy:
