@@ -40,6 +40,8 @@
         - "gpu_mem=16"
       modules:
         - "i2c-dev"
+      go_version: "1.21.6"
+      swap_size:  "512"
     services:
       enable:
         - dphys-swapfile.service
@@ -147,8 +149,7 @@
           - libfl-dev
           - g++
           - xxd
-    go_lang:    "go1.21.5"
-    swap_size:  "512"
+
 
   environment:
     ARCHFLAGS:  "{{ boards.RPiZ2W.arch_flags }}" 
@@ -222,7 +223,7 @@
     lineinfile:
       path: /etc/dphys-swapfile
       regexp: "^CONF_SWAPSIZE=.*$"
-      line: "CONF_SWAPSIZE={{ swap_size }}"
+      line: "CONF_SWAPSIZE={{ system.swap_size }}"
 
   - name: clone papirus repository
     git:
@@ -351,7 +352,7 @@
 
   - name: Install go
     unarchive:
-      src: "https://go.dev/dl/{{ go_lang }}.linux-arm64.tar.gz"
+      src: "https://go.dev/dl/go{{ system.go_version }}.linux-arm64.tar.gz"
       dest: /usr/local
       remote_src: yes
     register: golang
