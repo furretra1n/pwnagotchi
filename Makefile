@@ -57,7 +57,7 @@ $(PWN_RELEASE).img: $(SDIST) builder/pwnagotchi.json builder/pwnagotchi.yml $(sh
 	cd builder && sudo $(UNSHARE) $(PACKER) build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
 	sudo chown -R $$USER:$$USER builder/output-pwnagotchi
 	mv builder/output-pwnagotchi/image $(PWN_RELEASE).img
-	pishrink.sh $(PWN_RELEASE).img
+	./pishrink.sh $(PWN_RELEASE).img
 
 # If any of these files are updated, rebuild the checksums.
 $(PWN_RELEASE).sha256: $(PWN_RELEASE).img
