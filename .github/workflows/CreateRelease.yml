@@ -57,8 +57,7 @@ jobs:
         ls -a -s -h
         wget ${{ inputs.pishrink }}
         chmod +x pishrink.sh
-        sudo mv pishrink.sh /usr/local/bin
-        sudo pishrink.sh ./pwnagotchi-raspios-lite-${{ inputs.release_version }}.img
+        sudo ./pishrink.sh ./pwnagotchi-raspios-lite-${{ inputs.release_version }}.img
 
     - uses: edgarrc/action-7z@v1
       with:
