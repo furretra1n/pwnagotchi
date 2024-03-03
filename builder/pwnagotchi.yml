@@ -559,7 +559,7 @@
       dest: /usr/local/lib/python3.9/dist-packages/pwnagotchi/plugins/default/auto-update.py
       backup: no
       regexp: "evilsocket/pwnagotchi"
-      replace: "aluminum-ice/pwnagotchi"
+      replace: "furretra1n/pwnagotchi"
 
   - name: Delete unnecessary large folder to save space (/root/go) 
     file:
